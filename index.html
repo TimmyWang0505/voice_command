@@ -1,0 +1,108 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Voice Demo</title>
+
+    </style>
+</head>
+<body>
+
+
+<script src="./js/annyang.js"></script>
+<script src="./js/speechkitt.js"></script>
+<script src="./js/responsivevoice.js"></script>
+
+<script>
+
+    function speak(text, callback) {
+        var u = new SpeechSynthesisUtterance();
+        u.text = text;
+        u.lang = 'en-US';
+    
+        u.onend = function () {
+            if (callback) {
+                callback();
+            }
+        };
+    
+        u.onerror = function (e) {
+            if (callback) {
+                callback(e);
+            }
+        };
+    
+        speechSynthesis.speak(u);
+    }
+
+    if (annyang) {
+        var transferData = {};
+        // Let's define a command.
+        var commands = {
+            'open transfer': function() {
+                console.log('open transfer');
+                transferData = {};
+                //TODO Open Transfer popup.
+                 
+            },
+
+            'next': function() {
+                console.log('next');
+                //TODO trigger next event.
+                 
+            },
+
+            'choose from account :number': function(number) {
+                console.log('choose from account number - ' + number);
+                //TODO get full account number
+                var accountNum = number;
+                transferData['FROM_ACCOUNT'] = accountNum;
+                //TODO select from account in the page.
+            },
+
+            'set amount :amount': function(amount) {
+                console.log('set amount - ' + amount);
+                transferData['AMOUNT'] = amount;
+                //TODO trigger set amount in the page.
+            },
+
+            'choose to account :number': function(number) {
+                console.log('choose to account number - ' + number);
+                //TODO get full account number
+                var accountNum = number;
+                transferData['TO_ACCOUNT'] = accountNum;
+                //TODO select to account in the page.
+            },
+
+            'use default tax setting': function () {
+                console.log('use default tax setting');
+                //TODO trigger next event.
+            },
+
+            'confirm and send request': function () {
+                console.log('confirm and send request');
+            }
+
+        };
+
+        // Add our commands to annyang
+        annyang.addCommands(commands);
+
+        // Tell KITT to communicate with annyang
+        SpeechKITT.annyang();
+
+        // Define KITT's style
+        SpeechKITT.setStylesheet('./styles/flat.css');
+
+        // Add instructional texts
+        SpeechKITT.setInstructionsText('Say some commands');
+
+        // If user clicks start button, remember his choice for 1 minute
+        SpeechKITT.rememberStatus(10);
+
+        // Render KITT's interface
+        SpeechKITT.vroom();
+        // SpeechKITT.startRecognition();
+    }
+</script>
+</body>
+</html>
